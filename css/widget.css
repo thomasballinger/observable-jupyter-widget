@@ -25,6 +25,7 @@
 .observable-logo:hover svg {
   opacity: 0.8;
 }
+/*
 .observable-link:hover ~ iframe {
   outline: solid 1px #e0e0e0;
   box-shadow: 0 0 3px;
@@ -33,6 +34,7 @@
 .observable-link ~ iframe {
   outline: none;
 }
+*/
 /* Colab-only rule - untested */
 body > .output-area > .output-body {
   margin-right: 2px;

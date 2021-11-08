@@ -12,6 +12,7 @@ import { MODULE_NAME, MODULE_VERSION } from './version';
 // Import the CSS
 import '../css/widget.css';
 import { listenToSize } from './wrapper_code';
+import { logo } from './observable_logo';
 
 export class ExampleModel extends DOMWidgetModel {
   defaults(): any {
@@ -142,12 +143,6 @@ export class ExampleView extends DOMWidgetView {
   render(): void {
     this.el.classList.add('custom-widget');
 
-    const iframe_id = 'asdf';
-    this.el.innerHTML = `
-    <iframe id="${iframe_id}" sandbox="allow-scripts" style="overflow: auto; min-width: 100%; width: 0px;" frameBorder="0"></iframe>
-    outside of iframe
-    <div class="value">initial</div>`;
-
     const inputs = { extraCell: 123 };
     const slug = '@ballingt/embedding-example';
     const cells = [
@@ -156,6 +151,25 @@ export class ExampleView extends DOMWidgetView {
       'viewof minSepalWidth',
       'extraCell',
     ];
+
+    const pretty_slug = slug.startsWith('d/') ? 'embedded notebook' : slug;
+
+    const iframe_id = 'asdf';
+    // TODO make Observable logo optional
+
+    // TODO is this style helpful? I figured it was for aligning the logo
+    //<div style="text-align: right; position: relative">
+    this.el.innerHTML = `
+    <div>
+    <a class="observable-link" href="https://observablehq.com/${slug}" target="_blank" style="text-decoration: none; color: inherit;">
+    <div class="observable-logo" style="display: flex; align-items: center; justify-content: flex-end;">
+    <span>Edit ${pretty_slug} on Observable</span>
+    ${logo}
+    </div>
+    </a>
+
+    <iframe id="${iframe_id}" sandbox="allow-scripts" style="overflow: auto; min-width: 100%; width: 0px;" frameBorder="0"></iframe>
+    <div class="value">initial</div>`;
 
     this.el.querySelector('iframe')!.srcdoc = `<!DOCTYPE html>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@observablehq/inspector@3/dist/inspector.css">
