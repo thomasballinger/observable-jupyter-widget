@@ -14,17 +14,20 @@ import '../css/widget.css';
 import { listenToSizeAndValues } from './wrapper_code';
 import { logo } from './observable_logo';
 
-export class ExampleModel extends DOMWidgetModel {
+export class ObservableWidgetModel extends DOMWidgetModel {
   defaults(): any {
     return {
       ...super.defaults(),
-      _model_name: ExampleModel.model_name,
-      _model_module: ExampleModel.model_module,
-      _model_module_version: ExampleModel.model_module_version,
-      _view_name: ExampleModel.view_name,
-      _view_module: ExampleModel.view_module,
-      _view_module_version: ExampleModel.view_module_version,
+      _model_name: ObservableWidgetModel.model_name,
+      _model_module: ObservableWidgetModel.model_module,
+      _model_module_version: ObservableWidgetModel.model_module_version,
+      _view_name: ObservableWidgetModel.view_name,
+      _view_module: ObservableWidgetModel.view_module,
+      _view_module_version: ObservableWidgetModel.view_module_version,
       value: 'Hello World',
+      slug: '@ballingt/embedding-example',
+      cells: ['initial', 'cells'],
+      inputs: { initialInput: 123 },
     };
   }
 
@@ -33,10 +36,10 @@ export class ExampleModel extends DOMWidgetModel {
     // Add any extra serializers here
   };
 
-  static model_name = 'ExampleModel';
+  static model_name = 'ObservableWidgetModel';
   static model_module = MODULE_NAME;
   static model_module_version = MODULE_VERSION;
-  static view_name = 'ExampleView'; // Set to null if no view
+  static view_name = 'ObservableWidgetView'; // Set to null if no view
   static view_module = MODULE_NAME; // Set to null if no view
   static view_module_version = MODULE_VERSION;
 }
@@ -112,16 +115,14 @@ export const monitor = () => {
 
 class JupyterWidgetAllValuesObserver {
   pending() {
-    console.log('all values pending');
+    console.log('observable cell values pending');
   }
   fulfilled(value) {
-    console.log('all values fullfilled:', value);
     // postMessage does a "structured clone" which fails for DOM elements, functions, and more
     // so let's jsonify
     // We will probably wastefully jsonify again on the other side of the postMessage
     const cleaned = {};
     for (const name of Object.keys(value)) {
-      console.log(name);
       try {
         cleaned[name] = JSON.parse(JSON.stringify(value[name]));
       } catch (e) {
@@ -208,21 +209,20 @@ irisData
   return main;
 };`;
 
-export class ExampleView extends DOMWidgetView {
+export class ObservableWidgetView extends DOMWidgetView {
   outputEl?: HTMLElement;
 
   render(): void {
     this.el.classList.add('custom-widget');
 
-    const inputs = { extraCell: 123 };
-    const slug = '@ballingt/embedding-example';
-    const cells = [
-      'vegaPetalsWidget',
-      'viewof minSepalLength',
-      'viewof minSepalWidth',
-      'extraCell',
-    ];
+    const inputs = this.model.get('inputs');
+    const slug = this.model.get('slug');
+    //const slug = '@ballingt/embedding-example';
+    const cells = this.model.get('cells');
+    // QUESTION: Could this view be constructed or rendered before
+    // receiving the inital state push?
 
+    //TODO add a call to on() to listen to value changes?
     const pretty_slug = slug.startsWith('d/') ? 'embedded notebook' : slug;
 
     const iframe_id = 'asdf';
@@ -270,13 +270,6 @@ window.addEventListener('unload', () => {{
     const iframe = this.el.querySelector('iframe') as HTMLIFrameElement;
 
     const onValues = (values: any) => {
-      console.log('got values:', values);
-      /*
-      // This doesn't make sense, the PYthon model won't have attributes with these types.
-      for (const name of Object.keys(values)) {
-        this.model.set(name, values[name]);
-      }
-      */
       this.model.set('value', values);
       this.touch();
     };
