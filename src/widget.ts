@@ -11,7 +11,7 @@ import { MODULE_NAME, MODULE_VERSION } from './version';
 
 // Import the CSS
 import '../css/widget.css';
-import { listenToSize } from './wrapper_code';
+import { listenToSizeAndValues } from './wrapper_code';
 import { logo } from './observable_logo';
 
 export class ExampleModel extends DOMWidgetModel {
@@ -93,7 +93,6 @@ export class DocumentBodyDimensionsResizeObserverMonitor {
 }
 
 function postHeight(height) {
-  console.log('posting height of', height);
   window.parent.postMessage(
     {
       type: 'iframeSize',
@@ -111,15 +110,87 @@ export const monitor = () => {
   }
 };
 
+class JupyterWidgetAllValuesObserver {
+  pending() {
+    console.log('all values pending');
+  }
+  fulfilled(value) {
+    console.log('all values fullfilled:', value);
+    // postMessage does a "structured clone" which fails for DOM elements, functions, and more
+    // so let's jsonify
+    // We will probably wastefully jsonify again on the other side of the postMessage
+    const cleaned = {};
+    for (const name of Object.keys(value)) {
+      console.log(name);
+      try {
+        cleaned[name] = JSON.parse(JSON.stringify(value[name]));
+      } catch (e) {
+        cleaned[name] = null;
+      }
+    }
+    window.parent.postMessage(
+      {
+        type: 'allValues',
+        allValues: JSON.parse(JSON.stringify(cleaned)),
+      },
+      '*'
+    );
+  }
+  rejected(error) {
+    console.error('all values rejected:', error);
+  }
+}
+
 export const embed = async (slug, into, cells, inputs = {}) => {
   console.log('embed called with', slug, into, cells, inputs);
   const moduleUrl = 'https://api.observablehq.com/' + slug + '.js?v=3';
   const define = (await import(moduleUrl)).default;
   const inspect = Inspector.into(into);
   const filter = cells ? (name) => cells.includes(name) : (name) => true;
-  const main = new Runtime().module(define, (name) =>
-    filter(name) ? inspect() : true
-  );
+
+  const newDefine = (runtime, observer) => {
+    const main = define(runtime, observer);
+    // TODO dynamically gather all variable names
+    const allVariables = [
+      'vegaPetalsWidget',
+      'minSepalLength',
+      'minSepalWidth',
+      'extraCell',
+    ];
+    main.variable(observer('observableJupyterWidgetAllValues')).define('observableJupyterWidgetAllValues', [
+      ...allVariables
+    ], function(...args){ 
+      const allValues = {};
+      allVariables.forEach((name, i) => {
+        allValues[name] = args[i];
+      })
+      console.log('calculating allvalues');
+      // the reporting side effect could just go here, but then we'd still need to pass true to run the code
+      return allValues;
+    })
+  }
+
+  const runtime = new Runtime();
+
+  const main = runtime.module(newDefine, (name) => {
+    if (name === 'observableJupyterWidgetAllValues') {
+      return new JupyterWidgetAllValuesObserver();
+    }
+    return filter(name) ? inspect() : true
+  });
+
+/*
+main.variable(observer("irisSubset")).define("irisSubset", ["irisData","minSepalLength","minSepalWidth"], function(irisData,minSepalLength,minSepalWidth){return(
+irisData
+.filter(flower => 
+  flower.sepalLength >= minSepalLength)
+.filter(flower => 
+  flower.sepalWidth >= minSepalWidth)
+)});
+*/
+
+
+
   for (let name of Object.keys(inputs)) {
     try {
       console.log('redefining', name, 'to', inputs[name]);
@@ -198,7 +269,18 @@ window.addEventListener('unload', () => {{
     this.outputEl = this.el.querySelector('.value') as HTMLElement;
     const iframe = this.el.querySelector('iframe') as HTMLIFrameElement;
 
-    listenToSize(iframe);
+    const onValues = (values: any) => {
+      console.log('got values:', values);
+      /*
+      // This doesn't make sense, the PYthon model won't have attributes with these types.
+      for (const name of Object.keys(values)) {
+        this.model.set(name, values[name]);
+      }
+      */
+      this.model.set('value', values);
+      this.touch();
+    };
+    listenToSizeAndValues(iframe, onValues);
 
     // Do we want to trigger a value_changed right away? Probably, so callbacks added in Python fire
     this.value_changed();
@@ -207,7 +289,8 @@ window.addEventListener('unload', () => {{
 
   value_changed(): void {
     if (this.outputEl) {
-      this.outputEl.textContent = this.model.get('value');
+      this.outputEl.textContent =
+        'Widget value: ' + JSON.stringify(this.model.get('value'), null, 2);
     }
   }
 }

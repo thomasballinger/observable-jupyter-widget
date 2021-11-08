@@ -7,7 +7,10 @@ function getFrameByEvent(event: MessageEvent) {
 // TODO add more messages! send in jsonified Python data
 
 // Each embed gets its own event listener.
-export function listenToSize(iframe: HTMLIFrameElement): void {
+export function listenToSizeAndValues(
+  iframe: HTMLIFrameElement,
+  onValues: (values: any) => void
+): void {
   function onMessage(msg: MessageEvent) {
     if (!document.body.contains(iframe)) {
       // iframe is gone
@@ -17,7 +20,8 @@ export function listenToSize(iframe: HTMLIFrameElement): void {
     if (msg.data.type === 'iframeSize' && senderIframe === iframe) {
       console.log('setting iframe height to', msg.data.height);
       iframe.height = msg.data.height;
-      // TODO cheat here? the CSS must be off
+    } else if (msg.data.type === 'allValues' && senderIframe === iframe) {
+      onValues(msg.data.allValues);
     }
   }
 
