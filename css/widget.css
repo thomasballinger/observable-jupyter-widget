@@ -1,0 +1,39 @@
+.observable-logo {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 5px;
+  margin-right: 1px;
+  transition: background-color 0.2s;
+}
+.observable-logo svg {
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.observable-logo span {
+  opacity: 0;
+  transition: opacity 0.2s;
+  padding-right: 0.2em;
+  padding-left: 0.2em;
+}
+.observable-logo:hover {
+  background-color: white;
+}
+.observable-logo:hover span {
+  opacity: 0.8;
+}
+.observable-logo:hover svg {
+  opacity: 0.8;
+}
+.observable-link:hover ~ iframe {
+  outline: solid 1px #e0e0e0;
+  box-shadow: 0 0 3px;
+  transition: box-shadow 0.2s;
+}
+.observable-link ~ iframe {
+  outline: none;
+}
+/* Colab-only rule - untested */
+body > .output-area > .output-body {
+  margin-right: 2px;
+}

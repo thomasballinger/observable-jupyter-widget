@@ -1,0 +1,5 @@
+{
+  "packageManager": "python",
+  "packageName": "observable_jupyter_widget",
+  "uninstallInstructions": "Use your Python package manager (pip, conda, etc.) to uninstall the package observable_jupyter_widget"
+}

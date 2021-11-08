@@ -1,0 +1,5 @@
+{
+  "load_extensions": {
+    "observable_jupyter_widget/extension": true
+  }
+}

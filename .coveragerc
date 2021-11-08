@@ -1,0 +1,2 @@
+[run]
+omit = observable_jupyter_widget/tests/*
