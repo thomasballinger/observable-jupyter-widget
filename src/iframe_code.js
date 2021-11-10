@@ -68,7 +68,7 @@ export const monitor = () => {
 
 class JupyterWidgetAllValuesObserver {
     pending() {
-        console.log('observable cell values pending');
+        // could gray something out here
     }
     fulfilled(value) {
         // postMessage does a "structured clone" which fails for DOM elements, functions, and more
@@ -96,7 +96,6 @@ class JupyterWidgetAllValuesObserver {
 }
 
 export const embed = async (slug, into, cells) => {
-    console.log('embed called with', slug, into, cells);
     const moduleUrl = 'https://api.observablehq.com/' + slug + '.js?v=3';
     const define = (await import(moduleUrl)).default;
     const inspect = Inspector.into(into);
@@ -104,7 +103,6 @@ export const embed = async (slug, into, cells) => {
 
     const newDefine = (runtime, observer) => {
         const main = define(runtime, observer);
-        // TODO dynamically gather all variable names
         const allVariables = [
             'vegaPetalsWidget',
             'minSepalLength',
@@ -118,8 +116,6 @@ export const embed = async (slug, into, cells) => {
             allVariables.forEach((name, i) => {
                 allValues[name] = args[i];
             })
-            console.log('calculating allvalues');
-            // the reporting side effect could just go here, but then we'd still need to pass true to run the code
             return allValues;
         })
     }
@@ -133,8 +129,6 @@ export const embed = async (slug, into, cells) => {
     // TODO wait for this initial inputs message before actually running anything
     window.addEventListener('message', (msg) => {
         if (msg.data.type === 'inputs' && msg.source === window.parent) {
-            console.log('iframe received inputs message from parent', msg.data);
-
             // only the first time, start things up
             if (!main) {
                 const runtime = new Runtime();
@@ -153,7 +147,7 @@ export const embed = async (slug, into, cells) => {
             const inputs = msg.data.inputs;
             for (let name of Object.keys(inputs)) {
                 try {
-                    console.log('redefining', name, 'to', inputs[name]);
+                    //console.log('redefining', name, 'to', inputs[name]);
                     main.redefine(name, inputs[name]);
                 } catch (e) {
                     if (e.message.endsWith(name + ' is not defined')) {

@@ -17,7 +17,6 @@ export function listenToSizeAndValuesAndReady(
     }
     const senderIframe = getFrameByEvent(msg);
     if (msg.data.type === 'iframeSize' && senderIframe === iframe) {
-      console.log('setting iframe height to', msg.data.height);
       iframe.height = msg.data.height;
     } else if (msg.data.type === 'allValues' && senderIframe === iframe) {
       onValues(msg.data.allValues);

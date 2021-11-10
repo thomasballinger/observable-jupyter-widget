@@ -34,7 +34,10 @@ class ObservableWidget(DOMWidget):
     value = Dict({}).tag(sync=True)
 
     def __init__(self, slug: str, cells: typing.List[str] = None, inputs: typing.Dict = None, display_logo=True) -> None:
-        """Embeds a set of cells or an entire Observable notebook."""
+        """Embeds a set of cells or an entire Observable notebook.
+        
+        Cells are unordered: cells are always rendered in the order they appear in the Observable notebook.
+        """
         super().__init__()
 
         if slug.startswith("http"):

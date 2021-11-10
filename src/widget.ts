@@ -36,63 +36,39 @@ export class ObservableWidgetModel extends DOMWidgetModel {
   static serializers: ISerializers = {
     ...DOMWidgetModel.serializers,
     // Add any extra serializers here
+    // TODO I don't know what serializers do
   };
 
   static model_name = 'ObservableWidgetModel';
   static model_module = MODULE_NAME;
   static model_module_version = MODULE_VERSION;
-  static view_name = 'ObservableWidgetView'; // Set to null if no view
-  static view_module = MODULE_NAME; // Set to null if no view
+  static view_name = 'ObservableWidgetView';
+  static view_module = MODULE_NAME;
   static view_module_version = MODULE_VERSION;
 }
 
-// TODO use a bundler for this? or at least use an external js file read in
-
-// ugly hack until I figure out how to add code to the constructor
-function promiseAndResolve(): [Promise<void>, () => void] {
-  let resolve: () => void;
-  const p = new Promise<void>((r) => {
-    resolve = r;
-  });
-  return [p, resolve!];
-}
-
 export class ObservableWidgetView extends DOMWidgetView {
-  outputEl?: HTMLElement;
+  outputEl?: HTMLElement; // TODO remove this, it's just for debugging
   iframe: HTMLIFrameElement;
-
-  // ugly hack until I figure out how to add code to the constructor
-  pAndR = promiseAndResolve();
-  iframeReadyForInputs: Promise<void> = this.pAndR[0];
-  iframeReadyForInputsResolve: () => void = this.pAndR[1];
-
   queuedInputs: Record<string, any>[] = [];
 
-  /* How do I properly override this contructor? What's its signature?
-  constructor() {
-    super();
-    this.iframeReadyForInputs = new Promise((r) => {
-      this.iframeReadyForInputsResolve = r;
+  // ugly hack until I figure out how to add code to the constructor
+  pAndR = (function promiseAndResolve(): [Promise<void>, () => void] {
+    let resolve: () => void;
+    const p = new Promise<void>((r) => {
+      resolve = r;
     });
-  }
-  */
+    return [p, resolve!];
+  })();
+  iframeReadyForInputs: Promise<void> = this.pAndR[0];
+  setIframeReadyForInputs: () => void = this.pAndR[1];
 
   render(): void {
     this.el.classList.add('custom-widget');
 
     const slug = this.model.get('slug');
-    //const slug = '@ballingt/embedding-example';
     const cells = this.model.get('cells');
-    // QUESTION: Could this view be constructed or rendered before
-    // receiving the inital state push?
-    const inputs = this.model.get('inputs');
-
-    //TODO add a call to on() to listen to value changes?
     const pretty_slug = slug.startsWith('d/') ? 'embedded notebook' : slug;
-
-    // TODO this may not be needed? but if it is, it should be deterministic
-    const iframe_id =
-      'observable-iframe-' + Math.floor(Math.random() * 1000000);
 
     // TODO make Observable logo optional
 
@@ -107,33 +83,29 @@ export class ObservableWidgetView extends DOMWidgetView {
     </div>
     </a>
 
-    <iframe id="${iframe_id}" sandbox="allow-scripts" style="overflow: auto; min-width: 100%; width: 0px;" frameBorder="0"></iframe>
+    <iframe sandbox="allow-scripts" style="overflow: auto; min-width: 100%; width: 0px;" frameBorder="0"></iframe>
     <div class="value">initial</div>`;
 
-    this.el.querySelector('iframe')!.srcdoc = get_srcdoc(slug, cells, inputs);
+    this.el.querySelector('iframe')!.srcdoc = get_srcdoc(slug, cells);
     this.outputEl = this.el.querySelector('.value') as HTMLElement;
-    console.log('setting iframe...');
     this.iframe = this.el.querySelector('iframe') as HTMLIFrameElement;
 
-    const onReady = () => {
-      console.log('iframe ready for inputs...');
-      this.iframeReadyForInputsResolve();
-    };
-
-    listenToSizeAndValuesAndReady(this.iframe, this.onPublishValues, onReady);
-
-    console.log('sending initial inputs message:', inputs);
-    this.onInputs(inputs);
+    listenToSizeAndValuesAndReady(
+      this.iframe,
+      this.onPublishValues,
+      this.setIframeReadyForInputs
+    );
+    this.onInputs();
     this.model.on('change:inputs', this.onInputs, this);
   }
 
-  onInputs = async (inputs: Record<string, any>): Promise<void> => {
+  onInputs = async (): Promise<void> => {
+    const inputs: Record<string, any> = this.model.get('inputs');
     this.queuedInputs.push(inputs);
     await this.iframeReadyForInputs;
     // A lazy way to queue up inputs
     let inputsToSend;
     while ((inputsToSend = this.queuedInputs.shift())) {
-      console.log('sending inputs to iframe:', inputsToSend);
       sendInputs(this.iframe, inputsToSend);
     }
   };
@@ -141,18 +113,14 @@ export class ObservableWidgetView extends DOMWidgetView {
   onPublishValues = (values: Record<string, any>): void => {
     if (this.outputEl) {
       this.outputEl.textContent =
-        'Widget value: ' + JSON.stringify(this.model.get('value'), null, 2);
+        'Widget value: ' + JSON.stringify(values, null, 2);
     }
     this.model.set('value', values);
     this.touch();
   };
 }
 
-function get_srcdoc(
-  slug: string,
-  cells: string[],
-  inputs: Record<string, any>
-) {
+function get_srcdoc(slug: string, cells: string[]) {
   return `<!DOCTYPE html>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@observablehq/inspector@3/dist/inspector.css">
 <style>
