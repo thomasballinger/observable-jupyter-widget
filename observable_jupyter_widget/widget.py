@@ -23,19 +23,19 @@ class ObservableWidget(DOMWidget):
     _view_module = Unicode(module_name).tag(sync=True)
     _view_module_version = Unicode(module_version).tag(sync=True)
 
-    # TODO How to avoid these properties being synced from the JS side?
+    # These should not change
     slug = Unicode("").tag(sync=True)
     cells = List([]).tag(sync=True)
-    # TODO will making the not read_only be the way to send changes? 
+
+    # Each time this changes the widget will be updated
     inputs = Dict([]).tag(sync=True)
 
-    # TODO what does sync=True do? this should only be changed
-    # from there JavaScript side, not the Python side.
+    # This should only be changed from the JavaScript side
     value = Dict({}).tag(sync=True)
 
     def __init__(self, slug: str, cells: typing.List[str] = None, inputs: typing.Dict = None, display_logo=True) -> None:
         """Embeds a set of cells or an entire Observable notebook."""
-        super().__init__();
+        super().__init__()
 
         if slug.startswith("http"):
             raise ValueError("notebook identifier looks like a url, please path a specifier like @observablehq/a-taste-of-observable or d/4575c6c14b706a4f")
@@ -57,15 +57,15 @@ class ObservableWidget(DOMWidget):
 
 class ExampleEmbed(ObservableWidget):
     def __init__(self):
-        inputs = { 'extraCell': 123 };
-        slug = '@ballingt/embedding-example';
+        inputs = { 'extraCell': 123 }
+        slug = '@ballingt/embedding-example'
         cells = [
           'vegaPetalsWidget',
           'viewof minSepalLength',
           'viewof minSepalWidth',
           'extraCell',
-        ];
-        super(slug, cells=cells, inputs=inputs)
+        ]
+        super().__init__(slug, cells=cells, inputs=inputs)
 
 def jsonify(obj):
     return json.dumps(obj, cls=DataJSONEncoder)

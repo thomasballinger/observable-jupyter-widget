@@ -3,9 +3,10 @@ const version = require('./package.json').version;
 
 // Custom webpack rules
 const rules = [
+  //{ test: /iframe_code\.js/, loader: 'raw-loader', options: { esModule: false } },
   { test: /\.ts$/, loader: 'ts-loader' },
   { test: /\.js$/, loader: 'source-map-loader' },
-  { test: /\.css$/, use: ['style-loader', 'css-loader']}
+  { test: /\.css$/, use: ['style-loader', 'css-loader'] }
 ];
 
 // Packages that shouldn't be bundled but loaded at runtime
@@ -52,15 +53,15 @@ module.exports = [
   {
     entry: './src/index.ts',
     output: {
-        filename: 'index.js',
-        path: path.resolve(__dirname, 'dist'),
-        libraryTarget: 'amd',
-        library: "observable-jupyter-widget",
-        publicPath: 'https://unpkg.com/observable-jupyter-widget@' + version + '/dist/'
+      filename: 'index.js',
+      path: path.resolve(__dirname, 'dist'),
+      libraryTarget: 'amd',
+      library: "observable-jupyter-widget",
+      publicPath: 'https://unpkg.com/observable-jupyter-widget@' + version + '/dist/'
     },
     devtool: 'source-map',
     module: {
-        rules: rules
+      rules: rules
     },
     externals,
     resolve,

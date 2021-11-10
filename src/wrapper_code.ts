@@ -4,12 +4,11 @@ function getFrameByEvent(event: MessageEvent) {
   })[0];
 }
 
-// TODO add more messages! send in jsonified Python data
-
 // Each embed gets its own event listener.
-export function listenToSizeAndValues(
+export function listenToSizeAndValuesAndReady(
   iframe: HTMLIFrameElement,
-  onValues: (values: any) => void
+  onValues: (values: any) => void,
+  onReady: () => void
 ): void {
   function onMessage(msg: MessageEvent) {
     if (!document.body.contains(iframe)) {
@@ -22,8 +21,24 @@ export function listenToSizeAndValues(
       iframe.height = msg.data.height;
     } else if (msg.data.type === 'allValues' && senderIframe === iframe) {
       onValues(msg.data.allValues);
+    } else if (msg.data.type === 'ready' && senderIframe === iframe) {
+      onReady();
     }
   }
 
   window.addEventListener('message', onMessage);
+}
+
+export function sendInputs(
+  iframe: HTMLIFrameElement,
+  inputs: Record<string, any>
+): void {
+  // TODO error handing when these cannot be serialized!\
+  iframe.contentWindow!.postMessage(
+    {
+      type: 'inputs',
+      inputs,
+    },
+    '*'
+  );
 }

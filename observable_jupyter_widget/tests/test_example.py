@@ -6,9 +6,9 @@
 
 import pytest
 
-from ..example import ExampleWidget
+from ..widget import ObservableWidget
 
 
 def test_example_creation_blank():
-    w = ExampleWidget()
+    w = ObservableWidget()
     assert w.value == 'Hello World'
