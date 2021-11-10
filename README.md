@@ -1,5 +1,7 @@
 # WIP Observable Jupyter Widget
 
+See example [Colab notebook](https://colab.research.google.com/drive/1kPH2XkEszv_95Rijc5PhoxZ41QGFBI_d?usp=sharing)
+
 Does not work yet, just posted for collaboration.
 
 Most of the code is still the result of running https://github.com/jupyter-widgets/widget-ts-cookiecutter
