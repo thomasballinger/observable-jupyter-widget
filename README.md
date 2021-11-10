@@ -5,10 +5,6 @@ Does not work yet, just posted for collaboration.
 Most of the code is still the result of running https://github.com/jupyter-widgets/widget-ts-cookiecutter
 
 
-
-
-
-
 # observable-jupyter-widget
 
 [![Build Status](https://travis-ci.org/thomasballinger/observable-jupyter-widget.svg?branch=master)](https://travis-ci.org/thomasballinger/observable_jupyter_widget)

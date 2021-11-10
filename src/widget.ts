@@ -35,8 +35,6 @@ export class ObservableWidgetModel extends DOMWidgetModel {
 
   static serializers: ISerializers = {
     ...DOMWidgetModel.serializers,
-    // Add any extra serializers here
-    // TODO I don't know what serializers do
   };
 
   static model_name = 'ObservableWidgetModel';
