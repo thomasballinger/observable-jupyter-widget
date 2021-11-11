@@ -111,7 +111,7 @@ export class ObservableWidgetView extends DOMWidgetView {
   onPublishValues = (values: Record<string, any>): void => {
     if (this.outputEl) {
       this.outputEl.textContent =
-        'Widget value: ' + JSON.stringify(values, null, 2);
+        'widget.value: ' + JSON.stringify(values, null, 2);
     }
     this.model.set('value', values);
     this.touch();
@@ -133,8 +133,9 @@ ${iframe_bundle_src}
 const slug = '${slug}';
 const into = document.getElementsByTagName('div')[0];
 const cells = ${cells ? JSON.stringify(cells) : 'undefined'}
-embed(slug, into, cells).then(m => {{window.main = m;}});
+embed(slug, into, cells);
 monitor()
+// TODO how to clean up monitor or a window event listener when this cell gets rerun?
 </script>
 `;
 }

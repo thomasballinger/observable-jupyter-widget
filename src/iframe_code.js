@@ -103,17 +103,21 @@ export const embed = async (slug, into, cells) => {
 
     const newDefine = (runtime, observer) => {
         const main = define(runtime, observer);
-        const allVariables = [
-            'vegaPetalsWidget',
-            'minSepalLength',
-            'minSepalWidth',
-            'extraCell',
-        ];
+        const outputVariables = new Set();
+        // TODO allow a subset of these to be manually specified?
+        const candidateOutputVariables = cells ? cells : [...main._scope.keys()];
+        for (const cell of candidateOutputVariables) {
+            if (cell.slice(0, 7) === 'viewof ') {
+                outputVariables.add(cell.slice(7))
+            } else {
+                outputVariables.add(cell)
+            }
+        }
         main.variable(observer('observableJupyterWidgetAllValues')).define('observableJupyterWidgetAllValues', [
-            ...allVariables
+            ...outputVariables
         ], function (...args) {
             const allValues = {};
-            allVariables.forEach((name, i) => {
+            [...outputVariables].forEach((name, i) => {
                 allValues[name] = args[i];
             })
             return allValues;
