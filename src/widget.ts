@@ -26,10 +26,11 @@ export class ObservableWidgetModel extends DOMWidgetModel {
       _view_name: ObservableWidgetModel.view_name,
       _view_module: ObservableWidgetModel.view_module,
       _view_module_version: ObservableWidgetModel.view_module_version,
-      value: 'fake initial value',
-      slug: 'nonsense slug',
-      cells: [],
-      inputs: { initialInput: 123 },
+      value: undefined,
+      slug: '',
+      cells: undefined,
+      inputs: undefined,
+      outputs: undefined,
     };
   }
 
@@ -66,25 +67,27 @@ export class ObservableWidgetView extends DOMWidgetView {
 
     const slug = this.model.get('slug');
     const cells = this.model.get('cells');
+    const outputs = this.model.get('outputs');
     const pretty_slug = slug.startsWith('d/') ? 'embedded notebook' : slug;
 
     // TODO make Observable logo optional
 
     // TODO is this style helpful? I figured it was for aligning the logo
     //<div style="text-align: right; position: relative">
-    this.el.innerHTML = `
-    <div>
-    <a class="observable-link" href="https://observablehq.com/${slug}" target="_blank" style="text-decoration: none; color: inherit;">
+    const logoHTML = `<a class="observable-link" href="https://observablehq.com/${slug}" target="_blank" style="text-decoration: none; color: inherit;">
     <div class="observable-logo" style="display: flex; align-items: center; justify-content: flex-end;">
     <span>Edit ${pretty_slug} on Observable</span>
     ${logo}
     </div>
-    </a>
+    </a>`;
 
+    this.el.innerHTML = `
+    <div>
+    ${logoHTML}
     <iframe sandbox="allow-scripts" style="overflow: auto; min-width: 100%; width: 0px;" frameBorder="0"></iframe>
     <div class="value">initial</div>`;
 
-    this.el.querySelector('iframe')!.srcdoc = get_srcdoc(slug, cells);
+    this.el.querySelector('iframe')!.srcdoc = get_srcdoc(slug, cells, outputs);
     this.outputEl = this.el.querySelector('.value') as HTMLElement;
     this.iframe = this.el.querySelector('iframe') as HTMLIFrameElement;
 
@@ -115,6 +118,7 @@ export class ObservableWidgetView extends DOMWidgetView {
   };
 
   onPublishValues = (values: Record<string, any>): void => {
+    console.log('publishing values:', values);
     if (this.outputEl) {
       this.outputEl.innerHTML =
         '<span title="' +
@@ -126,7 +130,7 @@ export class ObservableWidgetView extends DOMWidgetView {
   };
 }
 
-function get_srcdoc(slug: string, cells: string[]) {
+function get_srcdoc(slug: string, cells?: string[], outputs?: string[]) {
   return `<!DOCTYPE html>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@observablehq/inspector@3/dist/inspector.css">
 <style>
@@ -140,8 +144,9 @@ ${iframe_bundle_src}
 
 const slug = '${slug}';
 const into = document.getElementsByTagName('div')[0];
-const cells = ${cells ? JSON.stringify(cells) : 'undefined'}
-embed(slug, into, cells);
+const cells = ${cells ? JSON.stringify(cells) : 'undefined'};
+const outputs = ${outputs ? JSON.stringify(outputs) : 'undefined'}
+embed(slug, into, cells, outputs);
 monitor()
 // TODO how to clean up monitor or a window event listener when this cell gets rerun?
 </script>

@@ -18,8 +18,8 @@ export function listenToSizeAndValuesAndReady(
     const senderIframe = getFrameByEvent(msg);
     if (msg.data.type === 'iframeSize' && senderIframe === iframe) {
       iframe.height = msg.data.height;
-    } else if (msg.data.type === 'allValues' && senderIframe === iframe) {
-      onValues(msg.data.allValues);
+    } else if (msg.data.type === 'outputs' && senderIframe === iframe) {
+      onValues(msg.data.outputs);
     } else if (msg.data.type === 'ready' && senderIframe === iframe) {
       onReady();
     }

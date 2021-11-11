@@ -66,7 +66,7 @@ export const monitor = () => {
     }
 };
 
-class JupyterWidgetAllValuesObserver {
+class JupyterWidgetOutputObserver {
     pending() {
         // could gray something out here
     }
@@ -84,8 +84,8 @@ class JupyterWidgetAllValuesObserver {
         }
         window.parent.postMessage(
             {
-                type: 'allValues',
-                allValues: JSON.parse(JSON.stringify(cleaned)),
+                type: 'outputs',
+                outputs: JSON.parse(JSON.stringify(cleaned)),
             },
             '*'
         );
@@ -95,7 +95,8 @@ class JupyterWidgetAllValuesObserver {
     }
 }
 
-export const embed = async (slug, into, cells) => {
+// (slug: string, into: string | HTMLElement, cells?: string[], outputs?: string[])
+export const embed = async (slug, into, cells, outputs) => {
     const moduleUrl = 'https://api.observablehq.com/' + slug + '.js?v=3';
     const define = (await import(moduleUrl)).default;
     const inspect = Inspector.into(into);
@@ -103,24 +104,28 @@ export const embed = async (slug, into, cells) => {
 
     const newDefine = (runtime, observer) => {
         const main = define(runtime, observer);
-        const outputVariables = new Set();
+        let outputVariables = new Set();
         // TODO allow a subset of these to be manually specified?
-        const candidateOutputVariables = cells ? cells : [...main._scope.keys()];
-        for (const cell of candidateOutputVariables) {
-            if (cell.slice(0, 7) === 'viewof ') {
-                outputVariables.add(cell.slice(7))
-            } else {
-                outputVariables.add(cell)
+        if (outputs) {
+            outputVariables = new Set(outputs)
+        } else {
+            const candidateOutputVariables = cells ? cells : [...main._scope.keys()];
+            for (const cell of candidateOutputVariables) {
+                if (cell.slice(0, 7) === 'viewof ') {
+                    outputVariables.add(cell.slice(7))
+                } else {
+                    outputVariables.add(cell)
+                }
             }
         }
-        main.variable(observer('observableJupyterWidgetAllValues')).define('observableJupyterWidgetAllValues', [
+        main.variable(observer('observableJupyterWidgetOutputCell')).define('observableJupyterWidgetOutputCell', [
             ...outputVariables
         ], function (...args) {
-            const allValues = {};
+            const output = {};
             [...outputVariables].forEach((name, i) => {
-                allValues[name] = args[i];
+                output[name] = args[i];
             })
-            return allValues;
+            return output;
         })
     }
 
@@ -137,8 +142,8 @@ export const embed = async (slug, into, cells) => {
             if (!main) {
                 const runtime = new Runtime();
                 main = runtime.module(newDefine, (name) => {
-                    if (name === 'observableJupyterWidgetAllValues') {
-                        return new JupyterWidgetAllValuesObserver();
+                    if (name === 'observableJupyterWidgetOutputCell') {
+                        return new JupyterWidgetOutputObserver();
                     }
                     return filter(name) ? inspect() : true
                 });
