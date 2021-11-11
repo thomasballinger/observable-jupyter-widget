@@ -32,7 +32,7 @@ export function sendInputs(
   iframe: HTMLIFrameElement,
   inputs: Record<string, any>
 ): void {
-  // TODO error handing when these cannot be serialized!\
+  // TODO error handing when these cannot be serialized!
   iframe.contentWindow!.postMessage(
     {
       type: 'inputs',

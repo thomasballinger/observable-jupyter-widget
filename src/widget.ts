@@ -98,7 +98,13 @@ export class ObservableWidgetView extends DOMWidgetView {
   }
 
   onInputs = async (): Promise<void> => {
-    const inputs: Record<string, any> = this.model.get('inputs');
+    const inputs: Record<string, any> = { ...this.model.get('inputs') };
+    for (const name of Object.keys(inputs)) {
+      // nonce, or some other value that is not a valid cell name on purpose
+      if (name.startsWith('-invalid-cell-name')) {
+        delete inputs[name];
+      }
+    }
     this.queuedInputs.push(inputs);
     await this.iframeReadyForInputs;
     // A lazy way to queue up inputs
@@ -110,8 +116,10 @@ export class ObservableWidgetView extends DOMWidgetView {
 
   onPublishValues = (values: Record<string, any>): void => {
     if (this.outputEl) {
-      this.outputEl.textContent =
-        'widget.value: ' + JSON.stringify(values, null, 2);
+      this.outputEl.innerHTML =
+        '<span title="' +
+        JSON.stringify(values, null, 2).replace(/"/g, "'") +
+        '">hover to preview widget.value</span>';
     }
     this.model.set('value', values);
     this.touch();

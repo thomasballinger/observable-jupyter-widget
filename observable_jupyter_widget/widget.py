@@ -9,6 +9,7 @@ Observable Embed Widget
 """
 import json
 import typing
+from time import time
 
 from ipywidgets import DOMWidget
 from traitlets import Unicode, Dict, List
@@ -56,6 +57,14 @@ class ObservableWidget(DOMWidget):
         self.slug = slug
         self.cells = cells
         self.inputs = inputs
+
+    def redefine(self, **kwargs):
+        """Redefine an Observable cell with a Python value."""
+        # TODO check that that cells exists?
+        # TODO send this message EVEN IF the kwargs are not new values. How to do this?
+        # To get around backbone? same-value caching behavior, add a nonce
+        kwargs['-invalid-cell-name-nonce'] = time()
+        self.inputs = kwargs
 
 
 class ExampleEmbed(ObservableWidget):
