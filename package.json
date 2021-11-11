@@ -17,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/thomasballinger/observable-jupyter-widget/issues"
   },
-  "license": "BSD-3-Clause",
+  "license": "ISC",
   "author": {
     "name": "Thomas Ballinger",
     "email": "me@ballingt.com"

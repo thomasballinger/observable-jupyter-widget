@@ -21,16 +21,8 @@ from jupyter_packaging import (
 )
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-
-
-
-
-# The name of the project
 name = 'observable_jupyter_widget'
-
-# Get the version
 version = get_version(pjoin(name, '_version.py'))
-
 
 # Representative files that should exist after a successful build
 jstargets = [
@@ -66,17 +58,16 @@ cmdclass['jsdeps'] = skip_if_exists(jstargets, npm_install)
 
 setup_args = dict(
     name            = name,
-    description     = 'Connect Observable notebooks to the Jupyter kernel',
+    description     = 'Connect Observable notebooks to the Jupyter kernel for two-way interactivity',
     version         = version,
-    scripts         = glob(pjoin('scripts', '*')),
     cmdclass        = cmdclass,
     packages        = find_packages(),
     author          = 'Thomas Ballinger',
     author_email    = 'me@ballingt.com',
     url             = 'https://github.com/thomasballinger/observable-jupyter-widget',
-    license         = 'BSD',
+    license         = 'ISC',
     platforms       = "Linux, Mac OS X, Windows",
-    keywords        = ['Jupyter', 'Widgets', 'IPython'],
+    keywords        = ['Observable', 'Jupyter', 'Widgets', 'IPython'],
     classifiers     = [
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
@@ -101,7 +92,7 @@ setup_args = dict(
             'nbval',
         ],
         'examples': [
-            # Any requirements for the examples to run
+            'jupyter',
         ],
         'docs': [
             'jupyter_sphinx',
@@ -113,8 +104,6 @@ setup_args = dict(
             'sphinx>=1.5',
             'sphinx_rtd_theme',
         ],
-    },
-    entry_points = {
     },
 )
 
