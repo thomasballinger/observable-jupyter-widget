@@ -4,7 +4,11 @@
 # Copyright (c) Thomas Ballinger.
 # Distributed under the terms of the Modified BSD License.
 
-from .widget import ObservableWidget
+from .widget import (
+    # interactive_embed,
+    ObservableWidget,
+    # interactive_embed_async,
+)
 from ._version import __version__, version_info
 
 import sys
