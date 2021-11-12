@@ -4,34 +4,40 @@
 [![codecov](https://codecov.io/gh/thomasballinger/observable-jupyter-widget/branch/master/graph/badge.svg)](https://codecov.io/gh/thomasballinger/observable-jupyter-widget)
 
 
-Connect Observable notebooks to the Jupyter kernel
+Connect Observable notebooks to the Jupyter kernel.
 
-Most of the code is still the result of running https://github.com/jupyter-widgets/widget-ts-cookiecutter
+Similar to the [observable-jupyter](https://github.com/thomasballinger/observable-jupyter) project, which allows feeding Python values into an Observable notebook once per embed. This widget version allows new inputs to be sent in and brings Observable cell outputs back to Python and integrates with the Jupyter Widget ecosystem.
 
 ## Usage
-
+Install the package and import the module.
 ```py
 !pip install observable_jupyter_widget
 import observable_jupyter_widget
 ```
 
+Instantiate a widget object and evaluate (use the variable name wihtout a semicolon it) to render it.
+
+Pass in the Observable notebook you want to render and optionally include which cells to display, input Python values to substitute into the Observable notebook, and which Observable cells to report the output value of.
+
 ```py
 w = observable_jupyter_widget.ObservableWidget(
     '@ballingt/embedding-example',
-    cells=['vegaPetalsWidget', 'viewof minSepalLength', 'viewof minSepalWidth', 'extraCell'],
-    inputs={'extraCell': 123},
+    cells=['vegaPetalsWidget', 'viewof minSepalLength', 'viewof minSepalWidth', 'extraCell'], # optional
+    inputs={'extraCell': 123},  # optional
+    outputs=['minSepalLength', 'extraCell']  # optional
 )
 w
 ```
 
+Widgets have a `.value` attribute which is a dictionary of values from Observable cells.
 ```py
-print(w.value)  # all outputs
+print(w.value)
 ```
 
+By assigning a dictionary to the `.inputs` attribute you can redefine Observable cells to new values.
 ```py
-w.inputs = {'extraCell': 10000}  # swap in different values
+w.inputs = {'extraCell': 10000}
 ```
-
 
 See example [Colab notebook](https://colab.research.google.com/drive/1kPH2XkEszv_95Rijc5PhoxZ41QGFBI_d?usp=sharing)
 
