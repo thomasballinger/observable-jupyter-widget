@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
@@ -54,7 +55,7 @@ export class DummyManager extends widgets.ManagerBase<HTMLElement> {
     msg: services.KernelMessage.IMessage,
     view: widgets.DOMWidgetView,
     options: any
-  ) {
+  ): Promise<HTMLElement> {
     // TODO: make this a spy
     // TODO: return an html element
     return Promise.resolve(view).then((view) => {

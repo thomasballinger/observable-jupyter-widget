@@ -1,18 +1,21 @@
 module.exports = {
   overrides: [
-    files: ['*.ts', '*.tsx'],
-    parserOptions: {
-      // why not the normal tsconfig?
-      //project: 'tsconfig.eslint.json',
-      project: ['./tsconfig.json'],
-      sourceType: 'module'
+    {
+      files: ['*.ts', '*.tsx'],
+      parserOptions: {
+        // why not the normal tsconfig?
+        // because this one excludes tests
+        project: 'tsconfig.eslint.json',
+        //project: ['./tsconfig.json'],
+        sourceType: 'module',
+      },
     },
   ],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended'
+    'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
@@ -25,10 +28,10 @@ module.exports = {
     '@typescript-eslint/quotes': [
       'error',
       'single',
-      { avoidEscape: true, allowTemplateLiterals: false }
+      { avoidEscape: true, allowTemplateLiterals: false },
     ],
     curly: ['error', 'multi-line'],
     eqeqeq: 'error',
-    'prefer-arrow-callback': 'error'
-  }
+    'prefer-arrow-callback': 'error',
+  },
 };
