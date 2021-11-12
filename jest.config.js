@@ -2,6 +2,7 @@ module.exports = {
   automock: false,
   moduleNameMapper: {
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
+    '^!!raw-loader!.*': 'jest-raw-loader',
   },
   preset: 'ts-jest/presets/js-with-babel',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],

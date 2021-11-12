@@ -13,7 +13,7 @@ describe('Example', () => {
     it('should be createable', () => {
       const model = createTestModel(ObservableWidgetModel);
       expect(model).toBeInstanceOf(ObservableWidgetModel);
-      expect(model.get('value')).toEqual('Hello World');
+      expect(model.get('value')).toEqual(undefined);
     });
 
     it('should be createable with a value', () => {

@@ -13,7 +13,8 @@ from ..widget import jsonify, ObservableWidget
 
 
 def test_creation_blank():
-    w = ObservableWidget()
+    w = ObservableWidget("@fakeauthor/fakenotebook")
+    # because this widget is never rendered, its JavaScript does not run.
     assert w.value is None
 
 

@@ -7,6 +7,18 @@
 from .widget import ObservableWidget
 from ._version import __version__, version_info
 
+import sys
+
+# Colab support: https://github.com/googlecolab/colabtools/issues/498
+try:
+    if "google.colab" in sys.modules:
+        from google.colab import output
+
+        output.enable_custom_widget_manager()
+except ImportError:
+    pass
+
+
 def _jupyter_labextension_paths():
     """Called by Jupyter Lab Server to detect if it is a valid labextension and
     to install the widget
@@ -19,10 +31,12 @@ def _jupyter_labextension_paths():
         from `src` directory into <jupyter path>/labextensions/<dest> directory
         during widget installation
     """
-    return [{
-        'src': 'labextension',
-        'dest': 'observable-jupyter-widget',
-    }]
+    return [
+        {
+            "src": "labextension",
+            "dest": "observable-jupyter-widget",
+        }
+    ]
 
 
 def _jupyter_nbextension_paths():
@@ -41,9 +55,11 @@ def _jupyter_nbextension_paths():
     require: Path to importable AMD Javascript module inside the
         <jupyter path>/nbextensions/<dest> directory
     """
-    return [{
-        'section': 'notebook',
-        'src': 'nbextension',
-        'dest': 'observable_jupyter_widget',
-        'require': 'observable_jupyter_widget/extension'
-    }]
+    return [
+        {
+            "section": "notebook",
+            "src": "nbextension",
+            "dest": "observable_jupyter_widget",
+            "require": "observable_jupyter_widget/extension",
+        }
+    ]

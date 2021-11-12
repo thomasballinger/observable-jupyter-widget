@@ -1,13 +1,20 @@
 module.exports = {
   overrides: [
     {
-      files: ['*.ts', '*.tsx'],
+      files: ['src/**/*.ts'],
+      excludedFiles: ['src/__tests__/**/*.ts'],
       parserOptions: {
         // why not the normal tsconfig?
         // because this one excludes tests
-        project: 'tsconfig.eslint.json',
-        //project: ['./tsconfig.json'],
+        //project: 'tsconfig.eslint.json',
+        project: ['./tsconfig.json'],
         sourceType: 'module',
+      },
+    },
+    {
+      files: ['.eslintrc.js', '*.config.js'],
+      env: {
+        node: true,
       },
     },
   ],
