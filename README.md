@@ -34,9 +34,10 @@ Widgets have a `.value` attribute which is a dictionary of values from Observabl
 print(w.value)
 ```
 
-By assigning a dictionary to the `.inputs` attribute you can redefine Observable cells to new values.
+Using the `redefine` method you can redefine Observable inputs to new values:
+
 ```py
-w.inputs = {'extraCell': 10000}
+w.redefine(extraCell=10000)
 ```
 
 See example [Colab notebook](https://colab.research.google.com/drive/1kPH2XkEszv_95Rijc5PhoxZ41QGFBI_d?usp=sharing)
