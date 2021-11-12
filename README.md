@@ -1,12 +1,3 @@
-# WIP Observable Jupyter Widget
-
-See example [Colab notebook](https://colab.research.google.com/drive/1kPH2XkEszv_95Rijc5PhoxZ41QGFBI_d?usp=sharing)
-
-Does not work yet, just posted for collaboration.
-
-Most of the code is still the result of running https://github.com/jupyter-widgets/widget-ts-cookiecutter
-
-
 # observable-jupyter-widget
 
 [![Build Status](https://travis-ci.org/thomasballinger/observable-jupyter-widget.svg?branch=master)](https://travis-ci.org/thomasballinger/observable_jupyter_widget)
@@ -14,6 +5,35 @@ Most of the code is still the result of running https://github.com/jupyter-widge
 
 
 Connect Observable notebooks to the Jupyter kernel
+
+Most of the code is still the result of running https://github.com/jupyter-widgets/widget-ts-cookiecutter
+
+## Usage
+
+```py
+!pip install observable_jupyter_widget
+import observable_jupyter_widget
+```
+
+```py
+w = observable_jupyter_widget.ObservableWidget(
+    '@ballingt/embedding-example',
+    cells=['vegaPetalsWidget', 'viewof minSepalLength', 'viewof minSepalWidth', 'extraCell'],
+    inputs={'extraCell': 123},
+)
+w
+```
+
+```py
+print(w.value)  # all outputs
+```
+
+```py
+w.inputs = {'extraCell': 10000}  # swap in different values
+```
+
+
+See example [Colab notebook](https://colab.research.google.com/drive/1kPH2XkEszv_95Rijc5PhoxZ41QGFBI_d?usp=sharing)
 
 ## Installation
 
@@ -30,6 +50,8 @@ jupyter nbextension enable --py [--sys-prefix|--user|--system] observable_jupyte
 ```
 
 ## Development Installation
+
+TODO this is fromthe cookiecutter template. It's not wrong, butit's not what I use.
 
 Create a dev environment:
 ```bash
