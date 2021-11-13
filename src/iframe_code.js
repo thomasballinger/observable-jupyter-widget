@@ -137,10 +137,6 @@ export const embed = async (slug, into, cells, outputs) => {
   };
 
   let main;
-  let setMain;
-  const mainP = new Promise((r) => {
-    setMain = r;
-  });
 
   // TODO wait for this initial inputs message before actually running anything
   window.addEventListener('message', (msg) => {
@@ -154,7 +150,6 @@ export const embed = async (slug, into, cells, outputs) => {
           }
           return filter(name) ? inspect() : true;
         });
-        setMain(main);
       }
       window.addEventListener('unload', () => {
         main._runtime.dispose();
