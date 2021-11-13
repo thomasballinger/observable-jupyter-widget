@@ -1,8 +1,13 @@
 # observable-jupyter-widget
 
-Connect Observable notebooks to the Jupyter kernel.
+Run Observable notebooks in Jupyter and send values back and forth.
 
-Similar to the [observable-jupyter](https://github.com/thomasballinger/observable-jupyter) project, which allows feeding Python values into an Observable notebook once per embed. This widget version allows new inputs to be sent in and brings Observable cell outputs back to Python and integrates with the Jupyter Widget ecosystem.
+* Allow viewers of a Jupyter notebook use powerful Observable inputs like the [FIPS county code brush](https://observablehq.com/@awhitty/fips-county-code-brush) to specify Python values interactively
+* Display data calculated in Jupyter on interactive D3 plots ([see gallery](https://observablehq.com/@d3/gallery))
+* Quickly iterate on data visualization on observablehq.com: publish an update to an Observable notebook, wait a few seconds, and refresh the Jupyter web page. That's right, no kernel restarts!
+* Or create powerful interactive widgets that request additional data from Python without building a webapp. Display a map that limits client-side data by requesting more when the user pans the map from a server-side Jupyter kernel with plenty of RAM.
+
+This library is similar to [observable-jupyter](https://github.com/thomasballinger/observable-jupyter), which allows feeding Python values into an Observable notebook once per embed. Unlike that library, this widget version allows new inputs to be sent in and brings Observable cell outputs back to Python. It also integrates with the Jupyter Widget ecosystem, so e.g. callbacks can run every time new values are produced in the embed.
 
 ## Usage
 Install the package and import the module.
@@ -37,7 +42,6 @@ w.redefine(extraCell=10000)
 ```
 
 See example [Colab notebook](https://colab.research.google.com/drive/1kPH2XkEszv_95Rijc5PhoxZ41QGFBI_d?usp=sharing)
-
 
 ## Limitations
 
