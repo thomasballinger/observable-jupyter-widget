@@ -1,6 +1,8 @@
 # observable-jupyter-widget
 
-Run Observable notebooks in Jupyter and send values back and forth.
+Run Observable notebooks in Jupyter, sending values back and forth between Python and JavaScript
+
+[Observable](https://observablehq.com/) is pretty great. But sometimes you need Python! And often what you have is Jupyter. What if you could use your (or someone else's) Observable notebooks in Jupyter?
 
 * Allow viewers of a Jupyter notebook use powerful Observable inputs like the [FIPS county code brush](https://observablehq.com/@awhitty/fips-county-code-brush) to specify Python values interactively
 * Display data calculated in Jupyter on interactive D3 plots ([see gallery](https://observablehq.com/@d3/gallery))
@@ -18,7 +20,7 @@ import observable_jupyter_widget
 
 Instantiate a widget object and evaluate (use the variable name wihtout a semicolon it) to render it.
 
-Pass in the Observable notebook you want to render and optionally include which cells to display, input Python values to substitute into the Observable notebook, and which Observable cells to report the output value of.
+Pass in the Observable notebook you want to render and optionally include which cells to display, input Python values to substitute into the Observable notebook, and which Observable cells to report the output values of.
 
 ```py
 w = observable_jupyter_widget.ObservableWidget(
