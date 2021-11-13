@@ -1,8 +1,8 @@
 # observable-jupyter-widget
 
-Run Observable notebooks in Jupyter, sending values back and forth between Python and JavaScript
+Run Observable notebooks in Jupyter, sending values between Python and JavaScript
 
-[Observable](https://observablehq.com/) is pretty great. But sometimes you need Python! And often what you have is Jupyter. What if you could use your (or someone else's) Observable notebooks in Jupyter?
+[Observable](https://observablehq.com/) is pretty great. But sometimes you need Python! Or, more often, what you already have is Jupyter. What if you could use your (or someone else's) Observable notebooks in Jupyter, passing values back and forth?
 
 * Allow viewers of a Jupyter notebook use powerful Observable inputs like the [FIPS county code brush](https://observablehq.com/@awhitty/fips-county-code-brush) to specify Python values interactively
 * Display data calculated in Jupyter on interactive D3 plots ([see gallery](https://observablehq.com/@d3/gallery))
