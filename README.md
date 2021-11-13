@@ -42,6 +42,32 @@ w.redefine(extraCell=10000)
 
 See example [Colab notebook](https://colab.research.google.com/drive/1kPH2XkEszv_95Rijc5PhoxZ41QGFBI_d?usp=sharing)
 
+
+## Limitations
+
+### ObservableWidgets only run when onscreen [#2](https://github.com/thomasballinger/observable-jupyter-widget/issues/2)
+For security (to prevent embedded notebooks from running untrusted Python code) an embedded Observable notebook runs in an iframe.
+The observable runtime is runs on [AnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame), an event that never happens if the iframe is offscreen in most browsers.
+
+### Embed output may not be ready when the next Jupyter cell runs [#1](https://github.com/thomasballinger/observable-jupyter-widget/issues/1)
+Observable notebooks take time to run and resolve their `.value` value (any amount of time, depending on the notebook) but the Jupyter kernel keeps right on chugging.
+When using "Restart and Run All" menu item in Jupyter, or even when quickly executing consecutive cells manually with option-enter, the `.value` attribute may still be None (the initial value) instead of a dictionary mapping cell names to output values. 
+
+To get around this, use ipython_blocking cell magic %block along with a function that evalutes to True once the value is ready, or just don't run all cells at once!
+
+```python
+import ipython_blocking
+w = ObservableWidget(...)
+observable_output_ready = lambda: w.value != None
+---
+%block observable_output_ready
+---
+print(w.value)
+```
+
+### Embeds do not execute in non-interactive notebook execution environments like Papermill
+ObservableWidget works great for interactive experiences embedded in a Jupyter notebook. Although results of JavaScript interactions are exposed by the `.value` attribute, it needs to be viewed by a user to run. If you're using a Jupyter notebook to run scheduled tasks like ETL, try a [Juypyter kernel that uses node](https://github.com/n-riesco/ijavascript) to run JavaScript.
+
 ## Installation
 
 You can install using `pip`:

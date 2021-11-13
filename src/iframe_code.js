@@ -126,7 +126,7 @@ export const embed = async (slug, into, cells, outputs) => {
       .define(
         'observableJupyterWidgetOutputCell',
         [...outputVariables],
-        function (...args) {
+        (...args) => {
           const output = {};
           [...outputVariables].forEach((name, i) => {
             output[name] = args[i];
