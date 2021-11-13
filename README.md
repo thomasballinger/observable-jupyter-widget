@@ -1,9 +1,5 @@
 # observable-jupyter-widget
 
-[![Build Status](https://travis-ci.org/thomasballinger/observable-jupyter-widget.svg?branch=master)](https://travis-ci.org/thomasballinger/observable_jupyter_widget)
-[![codecov](https://codecov.io/gh/thomasballinger/observable-jupyter-widget/branch/master/graph/badge.svg)](https://codecov.io/gh/thomasballinger/observable-jupyter-widget)
-
-
 Connect Observable notebooks to the Jupyter kernel.
 
 Similar to the [observable-jupyter](https://github.com/thomasballinger/observable-jupyter) project, which allows feeding Python values into an Observable notebook once per embed. This widget version allows new inputs to be sent in and brings Observable cell outputs back to Python and integrates with the Jupyter Widget ecosystem.
