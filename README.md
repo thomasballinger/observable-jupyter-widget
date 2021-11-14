@@ -4,7 +4,7 @@ Run Observable notebooks in Jupyter, sending values between Python and JavaScrip
 
 [Observable](https://observablehq.com/) is pretty great. But sometimes you need Python! Or, more often, what you already have is Jupyter. What if you could use your (or someone else's) Observable notebooks in Jupyter, passing values back and forth?
 
-* Allow viewers of a Jupyter notebook use powerful Observable inputs like the [FIPS county code brush](https://observablehq.com/@awhitty/fips-county-code-brush) to specify Python values interactively
+* Allow viewers of a Jupyter notebook use powerful Observable inputs like the [FIPS county code brush](https://observablehq.com/@awhitty/fips-county-code-brush) to specify Python values interactively [Example Colab notebook](https://colab.research.google.com/drive/14WikKTNukhk3adbmEz1lbRiuGrNnRgB4?usp=sharing)
 * Display data calculated in Jupyter on interactive D3 plots ([see gallery](https://observablehq.com/@d3/gallery))
 * Quickly iterate on data visualization on observablehq.com: publish an update to an Observable notebook, wait a few seconds, and refresh the Jupyter web page. That's right, no kernel restarts!
 * Or create powerful interactive widgets that request additional data from Python without building a webapp. Display a map that limits client-side data by requesting more when the user pans the map from a server-side Jupyter kernel with plenty of RAM.
