@@ -80,8 +80,15 @@ class JupyterWidgetOutputObserver {
     const cleaned = {};
     for (const name of Object.keys(value)) {
       try {
-        cleaned[name] = JSON.parse(JSON.stringify(value[name]));
+        let v = value[name];
+        if (v instanceof Set) {
+          v = Array.from(v);
+        } else if (v instanceof Map) {
+          v = Object.fromEntries(v);
+        }
+        cleaned[name] = JSON.parse(JSON.stringify(v));
       } catch (e) {
+        console.log('error JSONifying value of cell', name, v);
         cleaned[name] = null;
       }
     }

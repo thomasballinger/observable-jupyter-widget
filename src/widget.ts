@@ -85,7 +85,7 @@ export class ObservableWidgetView extends DOMWidgetView {
     <div>
     ${logoHTML}
     <iframe sandbox="allow-scripts" style="overflow: auto; min-width: 100%; width: 0px;" frameBorder="0"></iframe>
-    <div class="value">initial</div>`;
+    <div class="value">output not available yet...</div>`;
 
     this.el.querySelector('iframe')!.srcdoc = get_srcdoc(slug, cells, outputs);
     this.outputEl = this.el.querySelector('.value') as HTMLElement;
