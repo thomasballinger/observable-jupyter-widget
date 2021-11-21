@@ -81,12 +81,20 @@ pip install observable_jupyter_widget
 If you are using Jupyter Notebook 5.2 or earlier, you may also need to enable
 the nbextension:
 ```bash
-jupyter nbextension enable --py [--sys-prefix|--user|--system] observable_jupyter_widget
+jupyter nbextension enable --py [--sys-prefix|--user|--system] observable-jupyter-widget
 ```
+
+
+For JupyterLab, you seem to also need to install the extension, either through the GUI in JupyterLab or the command line:
+
+```bash
+jupyter labextension install observable-jupyter-widget
+```
+
 
 ## Development Installation
 
-TODO this is fromthe cookiecutter template. It's not wrong, butit's not what I use.
+TODO this is from the cookiecutter template. It's not wrong, but it's not what I use.
 
 Create a dev environment:
 ```bash
