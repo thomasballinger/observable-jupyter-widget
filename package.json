@@ -1,6 +1,6 @@
 {
   "name": "observable-jupyter-widget",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Connect Observable notebooks to the Jupyter kernel",
   "keywords": [
     "jupyter",
