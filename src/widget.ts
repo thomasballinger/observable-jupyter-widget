@@ -11,10 +11,10 @@ import { MODULE_NAME, MODULE_VERSION } from './version';
 import { listenToSizeAndValuesAndReady, sendInputs } from './wrapper_code';
 import { logo } from './observable_logo';
 
-// ../src/iframe_code.js because path is relative to lib
+// this file gets copied over to lib manually, not compiled by tsc
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore // some webpack import syntax doesn't work with TypeScript?
-import iframe_bundle_src from '!!raw-loader!../src/iframe_code.js';
+import iframe_bundle_src from '!!raw-loader!./iframe_code.js';
 import '../css/widget.css';
 export class ObservableWidgetModel extends DOMWidgetModel {
   defaults(): any {
