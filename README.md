@@ -48,8 +48,8 @@ See example [Colab notebook](https://colab.research.google.com/drive/1kPH2XkEszv
 ## Limitations
 
 ### ObservableWidgets only run when onscreen [#2](https://github.com/thomasballinger/observable-jupyter-widget/issues/2)
-For security (to prevent embedded notebooks from running untrusted Python code) an embedded Observable notebook runs in an iframe.
-The observable runtime is runs on [AnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame), an event that never happens if the iframe is offscreen in most browsers.
+For the security of notebook viewers (preventing embedded notebooks from running untrusted Python code) an embedded Observable notebook runs in an iframe.
+The observable runtime runs on [AnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame), an event that never happens if the iframe is offscreen in some browsers.
 
 ### Embed output may not be ready when the next Jupyter cell runs [#1](https://github.com/thomasballinger/observable-jupyter-widget/issues/1)
 Observable notebooks take time to run and resolve their `.value` value (any amount of time, depending on the notebook) but the Jupyter kernel keeps right on chugging.
